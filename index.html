@@ -4,60 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NanoStyle AI Studio</title>
-    <!-- منبع برای رابطه کاربری تاریک Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Vazirmatn', sans-serif; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #09090b; }
+        .glass-card { background: rgba(24, 24, 27, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(251, 191, 36, 0.15); }
+        .gold-glow { box-shadow: 0 0 25px rgba(251, 191, 36, 0.15); }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between p-4">
+<body class="text-zinc-100 min-h-screen flex flex-col justify-between p-4 max-w-md mx-auto">
 
-    <!-- هدر اپ -->
-    <header class="text-center py-6">
-        <h1 class="text-2xl font-bold tracking-wider text-amber-400">NanoStyle AI Studio</h1>
-        <p class="text-xs text-zinc-400 mt-1">استودیو هوشمند ویرایش تصویر و شبکه اجتماعی</p>
+    <!-- هدر لوکس اپ -->
+    <header class="text-center py-5">
+        <div class="inline-block p-2 rounded-2xl bg-amber-500/10 border border-amber-500/30 mb-2 gold-glow">
+            <svg class="w-8 h-8 text-amber-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+        </div>
+        <h1 class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent">NanoStyle AI</h1>
+        <p class="text-xs text-zinc-400 mt-1">استودیو هوشمند ویرایش تصویر و فیلترهای اینستاگرام</p>
     </header>
 
     <!-- بخش اصلی (آپلود و ابزارها) -->
-    <main class="space-y-4 max-w-md mx-auto w-full">
-        <!-- کادر آپلود عکس -->
-        <div id="uploadBox" class="border-2 border-dashed border-zinc-700 bg-zinc-900/50 rounded-2xl p-6 text-center cursor-pointer hover:border-amber-500 transition relative overflow-hidden">
-            
-            <!-- آیکون و متن اولیه -->
-            <div id="placeholderContent">
-                <svg class="w-12 h-12 mx-auto text-amber-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <p class="text-sm text-zinc-300">تصویر خود را برای ویرایش هوش مصنوعی بارگذاری کنید</p>
+    <main class="space-y-4 w-full">
+        <!-- کادر آپلود عکس با افکت شیشه‌ای -->
+        <div id="uploadBox" class="glass-card rounded-3xl p-6 text-center cursor-pointer hover:border-amber-500/50 transition relative overflow-hidden group">
+            <div id="placeholderContent" class="py-4">
+                <div class="w-14 h-14 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 mb-3 group-hover:scale-110 transition">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <p class="text-sm font-semibold text-zinc-200">بارگذاری تصویر برای ویرایش</p>
+                <p class="text-[11px] text-zinc-400 mt-1">مناسب برای اینستاگرام و پست‌های تجاری</p>
             </div>
 
-            <!-- پیش‌نمایش تصویر انتخاب شده -->
-            <img id="imagePreview" class="hidden w-full max-h-56 object-contain rounded-xl mx-auto mb-2 shadow-md" alt="Preview">
+            <!-- پیش‌نمایش تصویر -->
+            <img id="imagePreview" class="hidden w-full max-h-56 object-contain rounded-2xl mx-auto mb-2 shadow-xl border border-zinc-800" alt="Preview">
 
             <input type="file" id="fileInput" accept="image/*" class="hidden">
-            <button type="button" id="selectBtn" class="mt-4 bg-amber-500 hover:bg-amber-600 text-zinc-950 font-semibold px-6 py-2.5 rounded-xl transition-all shadow-lg text-sm">انتخاب عکس</button>
+            <button type="button" id="selectBtn" class="mt-3 bg-gradient-to-r from-amber-400 to-amber-600 text-zinc-950 font-bold px-6 py-2.5 rounded-xl transition-all shadow-lg text-sm hover:opacity-90 cursor-pointer">انتخاب از گالری</button>
         </div>
 
-        <!-- ابزارهای سریع -->
+        <!-- فیلترهای استودیویی و اینستاگرام -->
         <div class="grid grid-cols-2 gap-3">
-            <button type="button" id="proBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition opacity-50 cursor-not-allowed">
-                <span class="block text-amber-400 font-bold text-sm">بهبود کیفیت پرو</span>
-                <span class="text-[10px] text-zinc-400">افزایش وضوح و رفع نویز</span>
+            <button type="button" id="proBtn" class="glass-card p-4 rounded-2xl text-right hover:border-amber-500/50 transition cursor-pointer relative">
+                <span class="block text-amber-400 font-bold text-sm">سینماتیک گلد</span>
+                <span class="text-[10px] text-zinc-400">فیلتر گرم و پرتره لوکس</span>
             </button>
-            <button type="button" id="instaBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition opacity-50 cursor-not-allowed">
+            <button type="button" id="instaBtn" class="glass-card p-4 rounded-2xl text-right hover:border-amber-500/50 transition cursor-pointer relative">
                 <span class="block text-amber-400 font-bold text-sm">استایل اینستاگرام</span>
-                <span class="text-[10px] text-zinc-400">تنظیم نور و فیلتر مدرن</span>
+                <span class="text-[10px] text-zinc-400">کنتراست و روشنایی مدرن</span>
             </button>
         </div>
+
+        <!-- بخش خرید درون‌برنامه‌ای (نسخه پرو کافه بازار) -->
+        <div class="glass-card p-4 rounded-2xl border border-amber-500/30 bg-gradient-to-l from-amber-500/10 to-transparent flex items-center justify-between">
+            <div>
+                <span class="text-xs font-bold text-amber-400 block">نسخه نامحدود پرو (کافه بازار)</span>
+                <span class="text-[10px] text-zinc-400">باز شدن تمام هوش مصنوعی‌های پیشرفته</span>
+            </div>
+            <button type="button" onclick="buyCafeBazaarPro()" class="bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold px-4 py-2 rounded-xl text-xs transition shadow cursor-pointer">
+                خرید اشتراک
+            </button>
+        </div>
+
+        <!-- دکمه دانلود و ذخیره نهایی با واترمارک برند -->
+        <button type="button" id="downloadBtn" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 rounded-2xl transition-all shadow-xl text-sm flex items-center justify-center gap-2 cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            ذخیره تصویر با واترمارک NanoStyle
+        </button>
     </main>
 
     <!-- فوتر -->
-    <footer class="text-center py-4 text-xs text-zinc-600">
-        نسخه ۱.۰.۰ | طراحی شده برای کافه بازار
+    <footer class="text-center py-3 text-[11px] text-zinc-500">
+        NanoStyle AI Studio © 2026 | انتشاریافته در کافه بازار
     </footer>
 
-    <!-- کدهای جاوا اسکریپت برای پیش‌نمایش عکس و فعال‌سازی دکمه‌ها -->
+    <!-- منطق جاوا اسکریپت پیشرفته -->
     <script>
         const fileInput = document.getElementById('fileInput');
         const uploadBox = document.getElementById('uploadBox');
@@ -66,54 +93,84 @@
         const imagePreview = document.getElementById('imagePreview');
         const proBtn = document.getElementById('proBtn');
         const instaBtn = document.getElementById('instaBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
 
         let imageLoaded = false;
+        let originalImageSrc = '';
+        let currentFilter = 'none';
 
         function openGallery(e) {
-            e.stopPropagation();
+            if (e) e.stopPropagation();
             fileInput.click();
         }
 
-        uploadBox.addEventListener('click', openGallery);
-        selectBtn.addEventListener('click', openGallery);
+        uploadBox.onclick = openGallery;
+        selectBtn.onclick = openGallery;
 
-        // نمایش عکس انتخاب شده روی صفحه
-        fileInput.addEventListener('change', function(event) {
+        fileInput.onchange = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
+                    originalImageSrc = e.target.result;
+                    imagePreview.src = originalImageSrc;
+                    imagePreview.style.filter = 'none';
+                    currentFilter = 'none';
                     imagePreview.classList.remove('hidden');
                     placeholderContent.classList.add('hidden');
-                    selectBtn.textContent = 'تغییر عکس';
-
-                    // فعال کردن کلیدهای پایین پس از انتخاب عکس
+                    selectBtn.textContent = 'تغییر تصویر';
                     imageLoaded = true;
-                    proBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    instaBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
                 reader.readAsDataURL(file);
             }
-        });
+        };
 
-        // رویداد کلیک دکمه بهبود کیفیت
-        proBtn.addEventListener('click', function() {
-            if (!imageLoaded) {
-                alert('لطفاً ابتدا یک عکس انتخاب کنید!');
-                return;
-            }
-            alert('ابزار بهبود کیفیت پرو روی تصویر شما اعمال شد!');
-        });
+        proBtn.onclick = function() {
+            if (!imageLoaded) { alert('لطفاً ابتدا یک عکس انتخاب کنید!'); return; }
+            currentFilter = 'contrast(170%) brightness(115%) saturate(150%) sepia(20%)';
+            imagePreview.style.filter = currentFilter;
+        };
 
-        // رویداد کلیک دکمه استایل اینستاگرام
-        instaBtn.addEventListener('click', function() {
-            if (!imageLoaded) {
-                alert('لطفاً ابتدا یک عکس انتخاب کنید!');
-                return;
-            }
-            alert('استایل مدرن اینستاگرام روی تصویر شما اعمال شد!');
-        });
+        instaBtn.onclick = function() {
+            if (!imageLoaded) { alert('لطفاً ابتدا یک عکس انتخاب کنید!'); return; }
+            currentFilter = 'contrast(130%) brightness(110%) saturate(130%) hue-rotate(-15deg)';
+            imagePreview.style.filter = currentFilter;
+        };
+
+        // شبیه‌سازی اتصال به درگاه پرداخت درون‌برنامه‌ای کافه بازار
+        function buyCafeBazaarPro() {
+            alert('درگاه پرداخت درون‌برنامه‌ای کافه بازار: انتقال به سیستم امن پرداخت...');
+        }
+
+        downloadBtn.onclick = function() {
+            if (!imageLoaded) { alert('لطفاً ابتدا یک عکس انتخاب کنید!'); return; }
+
+            const img = new Image();
+            img.src = originalImageSrc;
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+
+                ctx.filter = currentFilter;
+                ctx.drawImage(img, 0, 0);
+
+                ctx.filter = 'none';
+                const fontSize = Math.max(16, Math.floor(canvas.width * 0.035));
+                ctx.font = `bold ${fontSize}px sans-serif`;
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.9)';
+                ctx.textAlign = 'left';
+                
+                const padding = fontSize;
+                ctx.fillText('NanoStyle AI Studio', padding, canvas.height - padding);
+
+                const link = document.createElement('a');
+                link.download = 'nanostyle-ai-pro.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
+            };
+        };
     </script>
 </body>
 </html>
