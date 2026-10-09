@@ -41,11 +41,11 @@
 
         <!-- ابزارهای سریع -->
         <div class="grid grid-cols-2 gap-3">
-            <button type="button" id="proBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition opacity-50 cursor-not-allowed">
+            <button type="button" id="proBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition">
                 <span class="block text-amber-400 font-bold text-sm">بهبود کیفیت پرو</span>
                 <span class="text-[10px] text-zinc-400">افزایش وضوح و رفع نویز</span>
             </button>
-            <button type="button" id="instaBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition opacity-50 cursor-not-allowed">
+            <button type="button" id="instaBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition">
                 <span class="block text-amber-400 font-bold text-sm">استایل اینستاگرام</span>
                 <span class="text-[10px] text-zinc-400">تنظیم نور و فیلتر مدرن</span>
             </button>
@@ -57,7 +57,7 @@
         نسخه ۱.۰.۰ | طراحی شده برای کافه بازار
     </footer>
 
-    <!-- کدهای جاوا اسکریپت برای پیش‌نمایش عکس و فعال‌سازی دکمه‌ها -->
+    <!-- کدهای جاوا اسکریپت -->
     <script>
         const fileInput = document.getElementById('fileInput');
         const uploadBox = document.getElementById('uploadBox');
@@ -87,33 +87,29 @@
                     imagePreview.classList.remove('hidden');
                     placeholderContent.classList.add('hidden');
                     selectBtn.textContent = 'تغییر عکس';
-
-                    // فعال کردن کلیدهای پایین پس از انتخاب عکس
                     imageLoaded = true;
-                    proBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    instaBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
                 reader.readAsDataURL(file);
             }
         });
 
-        // رویداد کلیک دکمه بهبود کیفیت
-        proBtn.addEventListener('click', function() {
+        // کلیک روی دکمه بهبود کیفیت پرو
+        proBtn.onclick = function() {
             if (!imageLoaded) {
                 alert('لطفاً ابتدا یک عکس انتخاب کنید!');
                 return;
             }
             alert('ابزار بهبود کیفیت پرو روی تصویر شما اعمال شد!');
-        });
+        };
 
-        // رویداد کلیک دکمه استایل اینستاگرام
-        instaBtn.addEventListener('click', function() {
+        // کلیک روی دکمه استایل اینستاگرام
+        instaBtn.onclick = function() {
             if (!imageLoaded) {
                 alert('لطفاً ابتدا یک عکس انتخاب کنید!');
                 return;
             }
             alert('استایل مدرن اینستاگرام روی تصویر شما اعمال شد!');
-        });
+        };
     </script>
 </body>
 </html>
