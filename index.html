@@ -43,11 +43,11 @@
         <div class="grid grid-cols-2 gap-3">
             <button type="button" id="proBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition">
                 <span class="block text-amber-400 font-bold text-sm">بهبود کیفیت پرو</span>
-                <span class="text-[10px] text-zinc-400">افزایش وضوح و رفع نویز</span>
+                <span class="text-[10px] text-zinc-400">افزایش کنتراست و وضوح</span>
             </button>
             <button type="button" id="instaBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition">
                 <span class="block text-amber-400 font-bold text-sm">استایل اینستاگرام</span>
-                <span class="text-[10px] text-zinc-400">تنظیم نور و فیلتر مدرن</span>
+                <span class="text-[10px] text-zinc-400">فیلتر گرم و مدرن</span>
             </button>
         </div>
     </main>
@@ -57,7 +57,7 @@
         نسخه ۱.۰.۰ | طراحی شده برای کافه بازار
     </footer>
 
-    <!-- کدهای جاوا اسکریپت -->
+    <!-- کدهای جاوا اسکریپت برای پردازش واقعی تصویر -->
     <script>
         const fileInput = document.getElementById('fileInput');
         const uploadBox = document.getElementById('uploadBox');
@@ -68,6 +68,7 @@
         const instaBtn = document.getElementById('instaBtn');
 
         let imageLoaded = false;
+        let originalImageSrc = '';
 
         function openGallery(e) {
             e.stopPropagation();
@@ -77,13 +78,14 @@
         uploadBox.addEventListener('click', openGallery);
         selectBtn.addEventListener('click', openGallery);
 
-        // نمایش عکس انتخاب شده روی صفحه
+        // بارگذاری و نمایش عکس اصلی
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
+                    originalImageSrc = e.target.result;
+                    imagePreview.src = originalImageSrc;
                     imagePreview.classList.remove('hidden');
                     placeholderContent.classList.add('hidden');
                     selectBtn.textContent = 'تغییر عکس';
@@ -93,22 +95,39 @@
             }
         });
 
-        // کلیک روی دکمه بهبود کیفیت پرو
-        proBtn.onclick = function() {
+        // تابع کمکی برای اعمال فیلترهای گرافیکی روی عکس
+        function applyFilter(filterStyle, successMessage) {
             if (!imageLoaded) {
                 alert('لطفاً ابتدا یک عکس انتخاب کنید!');
                 return;
             }
-            alert('ابزار بهبود کیفیت پرو روی تصویر شما اعمال شد!');
+
+            const img = new Image();
+            img.src = originalImageSrc;
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // اعمال فیلتر گرافیکی
+                ctx.filter = filterStyle;
+                ctx.drawImage(img, 0, 0);
+
+                // تبدیل نتیجه به تصویر و نمایش آن
+                imagePreview.src = canvas.toDataURL('image/jpeg');
+                alert(successMessage);
+            }
+        }
+
+        // دکمه بهبود کیفیت پرو (افزایش کنتراست و اشباع رنگ)
+        proBtn.onclick = function() {
+            applyFilter('contrast(130%) saturate(120%)', 'ابزار بهبود کیفیت پرو روی تصویر اعمال شد!');
         };
 
-        // کلیک روی دکمه استایل اینستاگرام
+        // دکمه استایل اینستاگرام (فیلتر گرم و سپیا)
         instaBtn.onclick = function() {
-            if (!imageLoaded) {
-                alert('لطفاً ابتدا یک عکس انتخاب کنید!');
-                return;
-            }
-            alert('استایل مدرن اینستاگرام روی تصویر شما اعمال شد!');
+            applyFilter('sepia(30%) contrast(110%) brightness(105%)', 'استایل اینستاگرام روی تصویر اعمال شد!');
         };
     </script>
 </body>
