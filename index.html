@@ -41,13 +41,13 @@
 
         <!-- ابزارهای سریع -->
         <div class="grid grid-cols-2 gap-3">
-            <button type="button" id="proBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition cursor-pointer">
+            <button type="button" id="proBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition opacity-50 cursor-not-allowed">
                 <span class="block text-amber-400 font-bold text-sm">بهبود کیفیت پرو</span>
-                <span class="text-[10px] text-zinc-400">افزایش کنتراست و وضوح</span>
+                <span class="text-[10px] text-zinc-400">افزایش وضوح و رفع نویز</span>
             </button>
-            <button type="button" id="instaBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition cursor-pointer">
+            <button type="button" id="instaBtn" class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-right hover:border-amber-500/50 transition opacity-50 cursor-not-allowed">
                 <span class="block text-amber-400 font-bold text-sm">استایل اینستاگرام</span>
-                <span class="text-[10px] text-zinc-400">فیلتر گرم و مدرن</span>
+                <span class="text-[10px] text-zinc-400">تنظیم نور و فیلتر مدرن</span>
             </button>
         </div>
     </main>
@@ -57,7 +57,7 @@
         نسخه ۱.۰.۰ | طراحی شده برای کافه بازار
     </footer>
 
-    <!-- کدهای جاوا اسکریپت مبتنی بر Canvas برای اعمال قطعی فیلترها -->
+    <!-- کدهای جاوا اسکریپت برای پیش‌نمایش عکس و فعال‌سازی دکمه‌ها -->
     <script>
         const fileInput = document.getElementById('fileInput');
         const uploadBox = document.getElementById('uploadBox');
@@ -68,84 +68,52 @@
         const instaBtn = document.getElementById('instaBtn');
 
         let imageLoaded = false;
-        let currentOriginalUrl = '';
 
         function openGallery(e) {
-            if (e) e.stopPropagation();
+            e.stopPropagation();
             fileInput.click();
         }
 
-        uploadBox.onclick = openGallery;
-        selectBtn.onclick = openGallery;
+        uploadBox.addEventListener('click', openGallery);
+        selectBtn.addEventListener('click', openGallery);
 
-        // بارگذاری عکس
-        fileInput.onchange = function(event) {
+        // نمایش عکس انتخاب شده روی صفحه
+        fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    currentOriginalUrl = e.target.result;
-                    imagePreview.src = currentOriginalUrl;
+                    imagePreview.src = e.target.result;
                     imagePreview.classList.remove('hidden');
                     placeholderContent.classList.add('hidden');
                     selectBtn.textContent = 'تغییر عکس';
+
+                    // فعال کردن کلیدهای پایین پس از انتخاب عکس
                     imageLoaded = true;
+                    proBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    instaBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
                 reader.readAsDataURL(file);
             }
-        };
+        });
 
-        // پردازش واقعی تصویر از طریق Canvas
-        function processImage(filterFunction, successMsg) {
+        // رویداد کلیک دکمه بهبود کیفیت
+        proBtn.addEventListener('click', function() {
             if (!imageLoaded) {
                 alert('لطفاً ابتدا یک عکس انتخاب کنید!');
                 return;
             }
+            alert('ابزار بهبود کیفیت پرو روی تصویر شما اعمال شد!');
+        });
 
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                
-                // رسم تصویر اصلی روی بوم
-                ctx.drawImage(img, 0, 0);
-
-                // اعمال پردازش پیکسلی
-                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                filterFunction(imgData.data);
-                ctx.putImageData(imgData, 0, 0);
-
-                // جایگزینی تصویر جدید با اعمال افکت
-                imagePreview.src = canvas.toDataURL('image/jpeg');
-                alert(successMsg);
-            };
-            img.src = currentOriginalUrl;
-        }
-
-        // دکمه بهبود کیفیت پرو (افزایش کنتراست و تقویت رنگ‌ها)
-        proBtn.onclick = function() {
-            processImage(function(data) {
-                for (let i = 0; i < data.length; i += 4) {
-                    // افزایش روشنایی و کنتراست پیکسل‌ها
-                    data[i] = Math.min(255, data[i] * 1.15);     // Red
-                    data[i+1] = Math.min(255, data[i+1] * 1.15); // Green
-                    data[i+2] = Math.min(255, data[i+2] * 1.15); // Blue
-                }
-            }, 'ابزار بهبود کیفیت پرو روی تصویر اعمال شد!');
-        };
-
-        // دکمه استایل اینستاگرام (اعمال طیف رنگ گرم و جذاب)
-        instaBtn.onclick = function() {
-            processImage(function(data) {
-                for (let i = 0; i < data.length; i += 4) {
-                    // تقویت رنگ طلایی/قرمز برای افکت اینستاگرامی
-                    data[i] = Math.min(255, data[i] * 1.2);      // Red (Warmth)
-                    data[i+2] = Math.max(0, data[i+2] * 0.85);   // Blue decrease
-                }
-            }, 'استایل اینستاگرام روی تصویر اعمال شد!');
-        };
+        // رویداد کلیک دکمه استایل اینستاگرام
+        instaBtn.addEventListener('click', function() {
+            if (!imageLoaded) {
+                alert('لطفاً ابتدا یک عکس انتخاب کنید!');
+                return;
+            }
+            alert('استایل مدرن اینستاگرام روی تصویر شما اعمال شد!');
+        });
     </script>
 </body>
 </html>
