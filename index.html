@@ -57,7 +57,7 @@
         نسخه ۱.۰.۰ | طراحی شده برای کافه بازار
     </footer>
 
-    <!-- کدهای جاوا اسکریپت امن و اصلاح‌شده -->
+    <!-- کدهای جاوا اسکریپت ساده و مستقیم -->
     <script>
         const fileInput = document.getElementById('fileInput');
         const uploadBox = document.getElementById('uploadBox');
@@ -68,7 +68,6 @@
         const instaBtn = document.getElementById('instaBtn');
 
         let imageLoaded = false;
-        let originalImageSrc = '';
 
         // باز کردن گالری
         function openGallery(e) {
@@ -85,8 +84,8 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    originalImageSrc = e.target.result;
-                    imagePreview.src = originalImageSrc;
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.filter = 'none'; // ریست فیلتر
                     imagePreview.classList.remove('hidden');
                     placeholderContent.classList.add('hidden');
                     selectBtn.textContent = 'تغییر عکس';
@@ -96,37 +95,22 @@
             }
         };
 
-        // تابع اعمال فیلتر گرافیکی
-        function applyFilter(filterStyle, successMessage) {
+        // دکمه بهبود کیفیت پرو (اعمال مستقیم فیلتر روی عکس)
+        proBtn.onclick = function() {
             if (!imageLoaded) {
                 alert('لطفاً ابتدا یک عکس انتخاب کنید!');
                 return;
             }
-
-            const img = new Image();
-            img.src = originalImageSrc;
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
-
-                ctx.filter = filterStyle;
-                ctx.drawImage(img, 0, 0);
-
-                imagePreview.src = canvas.toDataURL('image/jpeg');
-                alert(successMessage);
-            };
-        }
-
-        // دکمه بهبود کیفیت پرو
-        proBtn.onclick = function() {
-            applyFilter('contrast(130%) saturate(120%)', 'ابزار بهبود کیفیت پرو روی تصویر اعمال شد!');
+            imagePreview.style.filter = 'contrast(140%) saturate(130%) brightness(105%)';
         };
 
-        // دکمه استایل اینستاگرام
+        // دکمه استایل اینستاگرام (اعمال مستقیم فیلتر روی عکس)
         instaBtn.onclick = function() {
-            applyFilter('sepia(30%) contrast(110%) brightness(105%)', 'استایل اینستاگرام روی تصویر اعمال شد!');
+            if (!imageLoaded) {
+                alert('لطفاً ابتدا یک عکس انتخاب کنید!');
+                return;
+            }
+            imagePreview.style.filter = 'sepia(40%) contrast(120%) brightness(110%)';
         };
     </script>
 </body>
